@@ -1,5 +1,7 @@
 ~$*
 __pycache__
+papers
+src/results
 sp500_meta_db.pkl
 src/data/bovespa/transformed_data
 src/data/bovespa/backtests
@@ -13,3 +15,6 @@ src/data/sp500/annotated_data
 *.docx
 *.xlsx
 *.zip
+*.jpg
+*.png
+*.pptx
