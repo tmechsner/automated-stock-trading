@@ -1,0 +1,15 @@
+~$*
+__pycache__
+sp500_meta_db.pkl
+src/data/bovespa/transformed_data
+src/data/bovespa/backtests
+src/data/bovespa/annotated_data
+src/data/bovespa/orig_data
+src/data/bovespa/data
+src/data/sp500/data
+src/data/sp500/backtests
+src/data/sp500/annotated_data
+*.cprof
+*.docx
+*.xlsx
+*.zip

@@ -1,0 +1,5 @@
+Data from
+http://www.bmfbovespa.com.br/en_us/services/market-data/historical-data/equities/historical-data/
+
+File format described here
+http://www.bmfbovespa.com.br/en_us/services/market-data/historical-data/equities/historical-data-1/
