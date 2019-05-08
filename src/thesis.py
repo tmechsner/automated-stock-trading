@@ -51,12 +51,12 @@ def from_csv(name, date):
 def tune(simulation):
     pool = multiprocessing.Pool(processes=6)
     pool.map(simulation.tune_predictor, [
-        # KNNPredictor(),
-        # SAMKNNPredictor(),
-        # KNNConfidencePredictor(simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL),
+        KNNPredictor(),
+        SAMKNNPredictor(),
+        KNNConfidencePredictor(simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL),
         RFPredictor(),
-        # ARFPredictor(),
-        # RFConfidencePredictor(simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL)
+        ARFPredictor(),
+        RFConfidencePredictor(simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL)
     ])
     pool.close()
 
@@ -64,19 +64,19 @@ def tune(simulation):
 def simulate(simulation):
     force_recalculate = True
 
-    # simulation.add_predictor(BuyAndHoldPredictor, [simulation.BUY_SIGNAL], name='B&H', force_recalculate=force_recalculate)
-    # simulation.add_predictor(MajorityPredictor, [], name='Maj', force_recalculate=force_recalculate)
+    simulation.add_predictor(BuyAndHoldPredictor, [simulation.BUY_SIGNAL], name='B&H', force_recalculate=force_recalculate)
+    simulation.add_predictor(MajorityPredictor, [], name='Maj', force_recalculate=force_recalculate)
     simulation.add_predictor(KNNPredictor, [21, 'uniform'], 'kNN', force_recalculate=force_recalculate)
-    # simulation.add_predictor(KNNConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 0.7, 21, 'uniform'], 'kNN_conf_07', force_recalculate=force_recalculate)
-    # simulation.add_predictor(KNNConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 0.65, 21, 'uniform'], 'kNN_conf_065', force_recalculate=force_recalculate)
-    # simulation.add_predictor(KNNConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 0.6, 21, 'uniform'], 'kNN_conf_06', force_recalculate=force_recalculate)
-    # simulation.add_predictor(SAMKNNPredictor, [5, 'distance'], name='SAM', force_recalculate=force_recalculate)
-    # simulation.add_predictor(SAMKNNPredictor, [10, 'distance', 11], name='SAM_opt', force_recalculate=force_recalculate)
-    # simulation.add_predictor(RFPredictor, [10, 3, None], 'RF', force_recalculate=force_recalculate)
-    # simulation.add_predictor(RFConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 100, 3, None, 0.7], 'RF_conf_07', force_recalculate=force_recalculate)
-    # simulation.add_predictor(RFConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 100, 3, None, 0.65], 'RF_conf_065', force_recalculate=force_recalculate)
-    # simulation.add_predictor(RFConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 100, 3, None, 0.6], 'RF_conf_06', force_recalculate=force_recalculate)
-    # simulation.add_predictor(ARFPredictor, [100, 3, 20], 'ARF', force_recalculate=force_recalculate)
+    simulation.add_predictor(KNNConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 0.7, 21, 'uniform'], 'kNN_conf_07', force_recalculate=force_recalculate)
+    simulation.add_predictor(KNNConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 0.65, 21, 'uniform'], 'kNN_conf_065', force_recalculate=force_recalculate)
+    simulation.add_predictor(KNNConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 0.6, 21, 'uniform'], 'kNN_conf_06', force_recalculate=force_recalculate)
+    simulation.add_predictor(SAMKNNPredictor, [5, 'distance'], name='SAM', force_recalculate=force_recalculate)
+    simulation.add_predictor(SAMKNNPredictor, [10, 'distance', 11], name='SAM_opt', force_recalculate=force_recalculate)
+    simulation.add_predictor(RFPredictor, [10, 3, None], 'RF', force_recalculate=force_recalculate)
+    simulation.add_predictor(RFConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 100, 3, None, 0.7], 'RF_conf_07', force_recalculate=force_recalculate)
+    simulation.add_predictor(RFConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 100, 3, None, 0.65], 'RF_conf_065', force_recalculate=force_recalculate)
+    simulation.add_predictor(RFConfidencePredictor, [simulation.BUY_SIGNAL, simulation.SELL_SIGNAL, simulation.KEEP_SIGNAL, 100, 3, None, 0.6], 'RF_conf_06', force_recalculate=force_recalculate)
+    simulation.add_predictor(ARFPredictor, [100, 3, 20], 'ARF', force_recalculate=force_recalculate)
 
     simulation.run_backtest()
     f_scores, balances = simulation.evaluate('B&H')
@@ -142,8 +142,16 @@ def compare_results(balances, f_scores, alpha=0.05):
     wilcoxon_test(balances['ARF'], balances['RF'], alpha, 'ARF', 'RF')
 
 
+ST_TUNE = 0
+ST_SIMULATE = 1
+
+
 def run(tune_or_simulate):
-    # visual_techind_test()
+    """
+    Set up the StockTrader and run a simulation on it or tune predictor parameters on it.
+    :param tune_or_simulate: Determines whether to run simulation or tuning (ST_SIMULATE or ST_TUNE)
+    :return:
+    """
 
     start_date = datetime.date(2002, 6, 3)
     end_date = datetime.date(2017, 5, 31)
@@ -159,16 +167,19 @@ def run(tune_or_simulate):
         trading_days_per_year=246
     )
 
-    # simulation.print_feature_stats()
+    simulation.print_feature_stats()
 
-    if tune_or_simulate:
+    if tune_or_simulate == ST_SIMULATE:
         simulate(simulation)
-    else:
+    elif tune_or_simulate == ST_TUNE:
         tune(simulation)
 
 
 if __name__ == '__main__':
 
-    run(tune_or_simulate=1)
+    run_new_simulation = True
 
-    # compare_persisted('2018-09-08 05-06-56', 0.05)
+    if run_new_simulation:
+        run(tune_or_simulate=ST_SIMULATE)
+    else:
+        compare_persisted('2018-09-08 05-06-56', 0.05)

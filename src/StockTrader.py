@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-import technical_indicators
+import TechnicalIndicators
 from SP500Data import SP500Data
 from backtest.SingleValueStrategy import *
 from predictors.AbstractPredictor import AbstractPredictor
@@ -115,13 +115,13 @@ class StockTrader:
         """
         result = {}
         for symbol, stock_df in dfs.items():
-            pmas = technical_indicators.sma(stock_df, 5, 'PMA_S', col=ADJ_CLOSE_COL)
-            pmal = technical_indicators.sma(stock_df, 20, 'PMA_L', col=ADJ_CLOSE_COL)
-            vmas = technical_indicators.sma(stock_df, 5, 'VMA_S', col=ADJ_VOL_COL)
-            vmal = technical_indicators.sma(stock_df, 20, 'VMA_L', col=ADJ_VOL_COL)
-            rsi = technical_indicators.rsi(stock_df, 14, col=ADJ_CLOSE_COL)
-            sto = technical_indicators.sto(stock_df, 14, 3, col=ADJ_CLOSE_COL, col_low=ADJ_LOW_COL, col_high=ADJ_HIGH_COL)
-            bb = technical_indicators.bbands(stock_df, 8, 2, col=ADJ_CLOSE_COL)
+            pmas = TechnicalIndicators.sma(stock_df, 5, 'PMA_S', col=ADJ_CLOSE_COL)
+            pmal = TechnicalIndicators.sma(stock_df, 20, 'PMA_L', col=ADJ_CLOSE_COL)
+            vmas = TechnicalIndicators.sma(stock_df, 5, 'VMA_S', col=ADJ_VOL_COL)
+            vmal = TechnicalIndicators.sma(stock_df, 20, 'VMA_L', col=ADJ_VOL_COL)
+            rsi = TechnicalIndicators.rsi(stock_df, 14, col=ADJ_CLOSE_COL)
+            sto = TechnicalIndicators.sto(stock_df, 14, 3, col=ADJ_CLOSE_COL, col_low=ADJ_LOW_COL, col_high=ADJ_HIGH_COL)
+            bb = TechnicalIndicators.bbands(stock_df, 8, 2, col=ADJ_CLOSE_COL)
             result[symbol] = pd.concat([stock_df, pmas, pmal, vmas, vmal, rsi, sto, bb], axis=1)
         return result
 

@@ -1,8 +1,8 @@
 import os
 import sys
 
-import technical_indicators
-import bovespa_data
+import TechnicalIndicators
+import BovespaData
 
 from SAMkNN.SAMKNN.SAMKNNClassifier import SAMKNN
 
@@ -66,13 +66,13 @@ def build_tech_ind(dfs: dict) -> dict:
         open_col  = 'adj_open'  if 'adj_open'  in stock_df else 'open'
         low_col   = 'adj_low'   if 'adj_low'   in stock_df else 'low'
         high_col  = 'adj_high'  if 'adj_high'  in stock_df else 'high'
-        pmas = technical_indicators.sma(stock_df, 10, 'PMA_S', col=close_col)
-        pmal = technical_indicators.sma(stock_df, 21, 'PMA_L', col=close_col)
-        vmas = technical_indicators.sma(stock_df, 10, 'VMA_S', col=vol_col)
-        vmal = technical_indicators.sma(stock_df, 21, 'VMA_L', col=vol_col)
-        rsi = technical_indicators.rsi(stock_df, 14, col=close_col)
-        sto = technical_indicators.sto(stock_df, 14, 3, col=close_col, col_low=low_col, col_high=high_col)
-        bb = technical_indicators.bbands(stock_df, 8, 2, col=close_col)
+        pmas = TechnicalIndicators.sma(stock_df, 10, 'PMA_S', col=close_col)
+        pmal = TechnicalIndicators.sma(stock_df, 21, 'PMA_L', col=close_col)
+        vmas = TechnicalIndicators.sma(stock_df, 10, 'VMA_S', col=vol_col)
+        vmal = TechnicalIndicators.sma(stock_df, 21, 'VMA_L', col=vol_col)
+        rsi = TechnicalIndicators.rsi(stock_df, 14, col=close_col)
+        sto = TechnicalIndicators.sto(stock_df, 14, 3, col=close_col, col_low=low_col, col_high=high_col)
+        bb = TechnicalIndicators.bbands(stock_df, 8, 2, col=close_col)
         result[symbol] = pd.concat([stock_df, pmas, pmal, vmas, vmal, rsi, sto, bb], axis=1)
     return result
 
@@ -448,8 +448,8 @@ def stock_pred():
         for stock in shares_of_interest:
             stock_data_complete[stock] = pd.read_pickle(os.path.join(annotated_data_path, '{}.pkl'.format(stock)))
     else:
-        bovespa_data.convert_to_csv(shares_of_interest, orig_data_path, transformed_data_path)
-        stock_data_complete = bovespa_data.load_data(transformed_data_path)
+        BovespaData.convert_to_csv(shares_of_interest, orig_data_path, transformed_data_path)
+        stock_data_complete = BovespaData.load_data(transformed_data_path)
         stock_data_complete = annotate_splits(stock_data_complete, 0.69)
         stock_data_complete = build_tech_ind(stock_data_complete)
         stock_data_complete = build_features(stock_data_complete, two_features_only=two_classes_only)

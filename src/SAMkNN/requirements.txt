@@ -1,7 +1,0 @@
-numpy
-pandas
-sklearn
-scipy
-matplotlib
-enum34
-
