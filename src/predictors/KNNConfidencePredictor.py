@@ -19,11 +19,11 @@ class KNNConfidencePredictor(AbstractPredictor):
         self._SELL_SIGNAL = sell_signal
         self._KEEP_SIGNAL = keep_signal
 
-    def predict(self, X, y, todays_features, training_years, trading_days_per_year) -> int:
-        new_samples_since_training = len(y[self._trained_samples:])
+    def predict(self, training_data, training_labels, todays_features, training_years, trading_days_per_year) -> int:
+        new_samples_since_training = len(training_labels[self._trained_samples:])
         if new_samples_since_training >= training_years * trading_days_per_year:
-            self._classifier.fit(X, y)
-            self._trained_samples = len(y)
+            self._classifier.fit(training_data, training_labels)
+            self._trained_samples = len(training_labels)
 
         # predict_proba returns a probability score for each class.
         # Look at confidence of the one class only, as in a binary classification scenario the scores will add up to 1.

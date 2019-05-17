@@ -19,9 +19,9 @@ class SAMKNNPredictor(AbstractPredictor):
                                   useLTM=True)
         self._trained_samples = 0
 
-    def predict(self, X, y, todays_features, training_years, trading_days_per_year) -> int:
-        self._classifier.trainOnline(X[self._trained_samples:], y[self._trained_samples:], np.unique(y))
-        self._trained_samples += len(y[self._trained_samples:])
+    def predict(self, training_data, training_labels, todays_features, training_years, trading_days_per_year) -> int:
+        self._classifier.trainOnline(training_data[self._trained_samples:], training_labels[self._trained_samples:], np.unique(training_labels))
+        self._trained_samples += len(training_labels[self._trained_samples:])
 
         return self._classifier.predict([todays_features])[-1]
 

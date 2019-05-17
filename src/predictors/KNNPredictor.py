@@ -15,11 +15,11 @@ class KNNPredictor(AbstractPredictor):
         self._trained_samples = 0
         self._predict_probas = []
 
-    def predict(self, X, y, todays_features, training_years, trading_days_per_year) -> int:
-        new_samples_since_training = len(y[self._trained_samples:])
+    def predict(self, training_data, training_labels, todays_features, training_years, trading_days_per_year) -> int:
+        new_samples_since_training = len(training_labels[self._trained_samples:])
         if new_samples_since_training >= training_years * trading_days_per_year:
-            self._classifier.fit(X, y)
-            self._trained_samples = len(y)
+            self._classifier.fit(training_data, training_labels)
+            self._trained_samples = len(training_labels)
 
         self._predict_probas.append(self._classifier.predict_proba([todays_features])[0, 1])
         return self._classifier.predict([todays_features])[-1]

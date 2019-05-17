@@ -50,14 +50,14 @@ class SingleValueStrategy(AbstractStrategy):
             with open(data_path, 'wb') as file:
                 pickle.dump(predictions, file)
 
-    def backtest_step(self, X, y, todays_closes, todays_date, accumulated_splits, todays_features, training_years, trading_days_per_year):
+    def backtest_step(self, training_data, training_labels, todays_closes, todays_date, accumulated_splits, todays_features, training_years, trading_days_per_year):
 
-        for stock in X.index.levels[0]:
+        for stock in training_data.index.levels[0]:
 
             # print('Todays Features: ')
             # print(todays_features[stock])
             # print('Last Training day: ')
-            # print(X.loc[stock].iloc[-1])
+            # print(training_data.loc[stock].iloc[-1])
 
             if stock not in self._predictors.keys():
                 self._predictions[stock] = {}
@@ -82,8 +82,8 @@ class SingleValueStrategy(AbstractStrategy):
                 predictor = self._predictors[stock]
                 todays_feats = list(todays_features[stock].values())
 
-                X_train = X.loc[stock].values
-                y_train = y.loc[stock].values
+                X_train = training_data.loc[stock].values
+                y_train = training_labels.loc[stock].values
                 signal = predictor.predict(X_train, y_train, todays_feats, training_years, trading_days_per_year)
                 if type(signal) is list or type(signal) is np.ndarray:
                     signal = signal[-1]

@@ -20,9 +20,9 @@ class ARFPredictor(AbstractPredictor):
                                                 random_state=42)
         self._trained_samples = 0
 
-    def predict(self, X, y, todays_features, training_years, trading_days_per_year) -> int:
-        self._classifier.partial_fit(X[self._trained_samples:], y[self._trained_samples:], np.unique(y))
-        self._trained_samples += len(y[self._trained_samples:])
+    def predict(self, training_data, training_labels, todays_features, training_years, trading_days_per_year) -> int:
+        self._classifier.partial_fit(training_data[self._trained_samples:], training_labels[self._trained_samples:], np.unique(training_labels))
+        self._trained_samples += len(training_labels[self._trained_samples:])
 
         prediction = self._classifier.predict([todays_features])
         return prediction[-1]

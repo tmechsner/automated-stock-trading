@@ -8,11 +8,11 @@ class AbstractPredictor:
     def __init__(self):
         pass
 
-    def predict(self, X, y, todays_features, training_years, trading_days_per_year) -> int:
+    def predict(self, training_data, training_labels, todays_features, training_years, trading_days_per_year) -> int:
         """
         Predict the trend of a single stock based on knowledge about the past.
-        :param X: Features of all days until today.
-        :param y: Real development of stock price of all days until today -> prediction targets for training.
+        :param training_data: Features of all days until today.
+        :param training_labels: Real development of stock price of all days until today -> prediction targets for training.
         :param todays_features: Features of today, to be used for actual prediction.
         :param training_years: How many days to use for training in batch algorithms. There will be a buffer
         :param trading_days_per_year:

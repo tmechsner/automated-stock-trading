@@ -34,11 +34,11 @@ class RFPredictor(AbstractPredictor):
         for f in range(len(indices)):
             print("%d. feature %d (%f)" % (f + 1, indices[f], self._importances[indices[f]]))
 
-    def predict(self, X, y, todays_features, training_years, trading_days_per_year) -> int:
-        new_samples_since_training = len(y[self._trained_samples:])
+    def predict(self, training_data, training_labels, todays_features, training_years, trading_days_per_year) -> int:
+        new_samples_since_training = len(training_labels[self._trained_samples:])
         if new_samples_since_training >= training_years * trading_days_per_year:
-            self._classifier.fit(X, y)
-            self._trained_samples = len(y)
+            self._classifier.fit(training_data, training_labels)
+            self._trained_samples = len(training_labels)
             importances = self._classifier.feature_importances_
             for f in range(len(importances)):
                 self._importances[f] += importances[f]

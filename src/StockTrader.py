@@ -429,10 +429,11 @@ class StockTrader:
 
                 # Product of splits since the last trading day per stock
                 accumulated_splits = pd.Series.to_dict(
-                    stock_data_by_date[SPLIT_COL]\
-                    .loc[timeline[last_trading_day + 1]:timeline[trading_day]]\
-                    .groupby('Symbol')\
-                    .prod())
+                    stock_data_by_date[SPLIT_COL]
+                    .loc[timeline[last_trading_day + 1]:timeline[trading_day]]
+                    .groupby('Symbol')
+                    .prod()
+                )
                 todays_closes = pd.Series.to_dict(stock_data_by_date[CLOSE_COL].loc[trading_date])
                 todays_features = pd.DataFrame.to_dict(stock_data_by_date[feature_labels].loc[trading_date], orient='index')
                 if len(todays_closes) == len(self._symbols):
